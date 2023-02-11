@@ -15,8 +15,14 @@ def convert_file(csv_file, json_file, model):
                 else:
                     row["is_published"] = False
 
+            if "location_id" in row:
+                row["location"] = [row["location_id"]]
+                del row["location_id"]
+
     with open(json_file, "w", encoding="utf-8") as f:
         f.write(json.dumps(result, ensure_ascii=False))
 
-convert_file("ads.csv", "ads.json", "ads.ad")
-convert_file("categories.csv", "categories.json", "ads.category")
+convert_file("sourse/ad.csv", "ads.json", "ads.ad")
+convert_file("sourse/category.csv", "categories.json", "ads.category")
+convert_file("sourse/location.csv", "location.json", "users.location")
+convert_file("sourse/user.csv", "user.json", "users.user")
