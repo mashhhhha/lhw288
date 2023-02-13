@@ -1,15 +1,12 @@
 import http
 import json
 
-from django.core.paginator import Paginator
 from django.db.models import Count, Q
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 
-from ads.models import Ad, Category
 from users.models import User, Location
 
 
@@ -30,6 +27,7 @@ class UserDetailView(DetailView):
 
 class UserListView(ListView):
     model = User
+    #queryset = User.objects.all()
     queryset = User.objects.annotate(total_ads=Count("ad", filter=Q(ad__is_published=True)))
 
     def get(self, request, *args, **kwargs):
@@ -42,6 +40,7 @@ class UserListView(ListView):
               "username": user.username,
               "role": user.role,
               "age": user.age,
+              #"total_ads": user.ad_set.filter(is_published=True).count(),
               "total_ads": user.total_ads,
               "locations": [loc.name for loc in user.location.all()]
               } for user in self.object_list], safe=False)
@@ -119,4 +118,4 @@ class UserDeleteView(DeleteView):
         super().delete(request, *args, **kwargs)
         return JsonResponse({
             "status": "ok"
-        },status=http.HTTPStatus.NO_CONTENT, safe=False)
+        }, status=http.HTTPStatus.NO_CONTENT, safe=False)
