@@ -27,7 +27,6 @@ class UserDetailView(DetailView):
 
 class UserListView(ListView):
     model = User
-    #queryset = User.objects.all()
     queryset = User.objects.annotate(total_ads=Count("ad", filter=Q(ad__is_published=True)))
 
     def get(self, request, *args, **kwargs):
@@ -40,7 +39,6 @@ class UserListView(ListView):
               "username": user.username,
               "role": user.role,
               "age": user.age,
-              #"total_ads": user.ad_set.filter(is_published=True).count(),
               "total_ads": user.total_ads,
               "locations": [loc.name for loc in user.location.all()]
               } for user in self.object_list], safe=False)
