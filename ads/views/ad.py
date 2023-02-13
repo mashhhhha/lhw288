@@ -28,7 +28,7 @@ class AdDetailView(DetailView):
 
 class AdListView(ListView):
     model = Ad
-    queryset = Ad.objects.all()
+    queryset = Ad.objects.order_by("-price").all()
 
     def get(self, request, *args, **kwargs):
         super().get(request, *args, **kwargs)

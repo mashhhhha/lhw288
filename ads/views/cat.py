@@ -22,7 +22,7 @@ class CategoryDetailView(DetailView):
 
 class CategoryListView(ListView):
     model = Category
-    queryset = Category.objects.all()
+    queryset = Category.objects.order_by("name").all()
 
     def get(self, request, *args, **kwargs):
         super().get(request, *args, **kwargs)
